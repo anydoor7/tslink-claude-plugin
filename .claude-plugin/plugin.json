@@ -1,6 +1,16 @@
 {
   "name": "tslink",
+  "displayName": "TSLink",
   "description": "Private HTTPS previews for local apps with TSLink.",
+  "keywords": [
+    "tailscale",
+    "preview",
+    "dev-server",
+    "private-url",
+    "mobile",
+    "sharing",
+    "mcp"
+  ],
   "author": {
     "name": "anydoor7"
   },
