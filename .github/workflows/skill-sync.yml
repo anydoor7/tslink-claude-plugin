@@ -1,0 +1,30 @@
+name: Skill sync
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '17 8 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Validate plugin JSON
+        run: python3 -m json.tool .claude-plugin/plugin.json > /dev/null
+      - name: Compare canonical skill
+        shell: bash
+        run: |
+          set -euo pipefail
+          canonical_skill=$(mktemp)
+          trap 'rm -f "$canonical_skill"' EXIT
+          curl --fail --silent --show-error --location --retry 3 \
+            https://raw.githubusercontent.com/anydoor7/tslink/main/skills/tslink-preview/SKILL.md \
+            --output "$canonical_skill"
+          cmp skills/tslink-preview/SKILL.md "$canonical_skill"
