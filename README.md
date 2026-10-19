@@ -29,8 +29,10 @@ MCP connection in the same client.
 
 ## What runs and connects
 
-Claude Code fetches this plugin from GitHub through the
-`anydoor7/tslink` marketplace. The plugin launches the locally installed
+Claude Code fetches this plugin from this GitHub repository, for example
+through the `anydoor7/tslink` marketplace. That marketplace pins a reviewed
+commit; pushing here alone does not update its users. The plugin launches the
+locally installed
 `tslink mcp` stdio server. Claude Code sends tool arguments to that process
 and receives tool results, which can include app configuration, identities,
 URLs and requested logs. The skill can also invoke the local TSLink CLI to
@@ -45,7 +47,25 @@ Tailscale API. Custom coordination servers and configured alert webhooks or
 commands receive data for those features. Sharing may install a persistent
 local background service. The preview skill asks about access and that
 service before sharing and does not enable Funnel or create guest links.
-Other TSLink MCP tools can publish apps when explicitly requested. See the
+When explicitly requested, the MCP tools can:
+
+- Publish apps privately through Tailscale or publicly through Funnel, configure
+  services, remove apps and their owned Tailscale devices (`share`, `add`, `unshare`).
+- Invite people to the tailnet or share service devices, list, resend and revoke
+  invitations (`invite_user`, `invite_device`, `invite_list`, `invite_resend`, `invite_revoke`).
+- Add, update and remove people, grant or revoke app access, set access deadlines,
+  and approve or deny access requests (`people_*`, `extend`, `requests_*`).
+- Set service tags, enable or disable the portal, edit gateway routes, and
+  create or revoke browser guest links (`tags_set`, `portal_*`, `guest_*`).
+- Apply service templates and app recipes, restart gateway nodes, configure
+  health checks, and inspect app status (`template_*`, `recipe_*`, `app_restart`, `health*`).
+- Read daemon logs, the mutation journal and access history (`logs`, `mcp_audit`,
+  `access_log`, `access_summary`).
+
+These capabilities follow the tool list in
+[`cmd/mcp_titles.go`](https://github.com/anydoor7/tslink/blob/main/cmd/mcp_titles.go).
+Some operations change local configuration; invitations and administrative
+operations can send data to the Tailscale API. See the
 [integration guide](https://github.com/anydoor7/tslink/blob/main/docs/agent-integrations.md).
 
 ## Privacy Policy
@@ -72,7 +92,13 @@ for sensitive security reports.
 The canonical skill lives in
 [anydoor7/tslink](https://github.com/anydoor7/tslink/blob/main/skills/tslink-preview/SKILL.md).
 Edit it there first; this repository carries a byte-identical copy checked
-by CI on pushes, pull requests and a daily schedule.
+by CI on pushes to main and pull requests, with a best-effort daily schedule
+(GitHub can disable schedules on inactive repositories). The tslink repository's
+CI also checks the skill and MCP command at its pinned plugin commit. To ship an
+update through the `anydoor7/tslink` marketplace, push the plugin commit first,
+then open a reviewed PR in `anydoor7/tslink` that bumps `source.sha` in
+`.claude-plugin/marketplace.json` to that full commit SHA. Keep both skill copies
+identical in that PR. After it merges, users update the marketplace and plugin.
 
 Licensed under [Apache 2.0](LICENSE). TSLink is an independent project and
 is not made or endorsed by Tailscale.
