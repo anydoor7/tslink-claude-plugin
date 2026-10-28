@@ -1,7 +1,7 @@
 {
   "name": "tslink",
   "displayName": "TSLink",
-  "description": "Private HTTPS previews for local apps with TSLink.",
+  "description": "Private app previews with the TSLink home gateway and per-person access.",
   "keywords": [
     "tailscale",
     "preview",
